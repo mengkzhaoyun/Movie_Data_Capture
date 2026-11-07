@@ -429,6 +429,18 @@
         "XV",
         "SRXV"
       ]
+    },
+    "marlomedia_h1814": {
+      "maker_prefix": "h_1814",
+      "channels": [
+        "digital_padded",
+        "digital_legacy_padded",
+        "mono_raw",
+        "mono_padded"
+      ],
+      "prefixes": [
+        "NMSL"
+      ]
     }
   },
   "fallback_maker_prefixes": [
