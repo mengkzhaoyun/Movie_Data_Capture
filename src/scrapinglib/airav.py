@@ -11,6 +11,7 @@ from .parser import Parser
 from .rule_loader import (
     eval_all_xpaths,
     eval_first_xpath,
+    extract_dmm_cid_from_url,
     load_source_rules,
     resolve_dmm_hd_cover,
     resolve_separate_poster,
@@ -212,11 +213,18 @@ class Airav(Parser):
 
         cover_upgrade_conf = self.rules.get("cover_upgrade", {})
         if cover_upgrade_conf.get("strategy", "dmm_aws_2k_first") == "dmm_aws_2k_first":
+            hint_cid = extract_dmm_cid_from_url(raw_cover)
+            if not hint_cid:
+                for sample_url in self.getExtrafanart(htmltree) or []:
+                    hint_cid = extract_dmm_cid_from_url(sample_url)
+                    if hint_cid:
+                        break
             return resolve_dmm_hd_cover(
                 self.number,
                 self.session,
                 fallback_cover=raw_cover,
                 cover_upgrade_conf=cover_upgrade_conf,
+                hint_cid=hint_cid,
             )
         return raw_cover
 

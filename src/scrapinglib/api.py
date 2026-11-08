@@ -222,7 +222,7 @@ class Scraping:
             elif (re.search(r"\d+\D+-", file_number) or "siro" in lo_file_number):
                 if "mgstage" in sources:
                     sources = insert(sources, "mgstage")
-            elif "gcolle" in sources and (re.search("\d{6}", file_number)):
+            elif "gcolle" in sources and (re.search(r"\d{6}", file_number)):
                 sources = insert(sources, "gcolle")
             elif re.search(r"^\d{5,}", file_number) or \
                     (re.search(r"^\d{6}-\d{3}", file_number)) or "heyzo" in lo_file_number:

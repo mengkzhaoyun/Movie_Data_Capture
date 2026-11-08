@@ -308,10 +308,44 @@ class TestDeclarativeScrapers(unittest.TestCase):
             "https://awsimgsrc.dmm.co.jp/pics_dig/digital/amateur/ankk098/ankk098jp.jpg",
         )
 
-        # Extract CID from DMM trailer URL
+        # Extract CID from DMM trailer URL (legacy /litevideo/freepv/ and new /pv/<token>/<cid>hhb.mp4)
         self.assertEqual(
             extract_dmm_cid_from_url("//cc3001.dmm.co.jp/litevideo/freepv/1/118/118abp00933/118abp00933_dmb_w.mp4"),
             "118abp00933",
+        )
+        self.assertEqual(
+            extract_dmm_cid_from_url("https://cc3001.dmm.co.jp/pv/v1_token/h_346rebd00980hhb.mp4"),
+            "h_346rebd00980",
+        )
+        self.assertEqual(
+            extract_dmm_cid_from_url("https://www.jav321.com/video/h_1814nmsl00034"),
+            "h_1814nmsl00034",
+        )
+
+        # Regression tests for newly mapped studios (NMSL, DOKS, NAAC, MBRAB, FWAY, KTRA)
+        self.assertEqual(
+            build_dmm_cover_urls("NMSL-034")[0],
+            "https://awsimgsrc.dmm.co.jp/pics_dig/digital/video/h_1814nmsl00034/h_1814nmsl00034pl.jpg",
+        )
+        self.assertEqual(
+            build_dmm_cover_urls("DOKS-630")[0],
+            "https://awsimgsrc.dmm.co.jp/pics_dig/digital/video/36doks00630/36doks00630pl.jpg",
+        )
+        self.assertEqual(
+            build_dmm_cover_urls("NAAC-008")[0],
+            "https://awsimgsrc.dmm.co.jp/pics_dig/digital/video/h_706naac00008b/h_706naac00008bpl.jpg",
+        )
+        self.assertEqual(
+            build_dmm_cover_urls("MBRAB-041")[0],
+            "https://awsimgsrc.dmm.co.jp/pics_dig/digital/video/406mbrab00041/406mbrab00041pl.jpg",
+        )
+        self.assertEqual(
+            build_dmm_cover_urls("FWAY-001")[0],
+            "https://awsimgsrc.dmm.co.jp/pics_dig/digital/video/h_491fwa00001/h_491fwa00001pl.jpg",
+        )
+        self.assertEqual(
+            build_dmm_cover_urls("KTRA-268")[0],
+            "https://awsimgsrc.dmm.co.jp/pics_dig/digital/video/h_094ktra00268e/h_094ktra00268epl.jpg",
         )
 
         mock_session = MagicMock()
@@ -327,6 +361,36 @@ class TestDeclarativeScrapers(unittest.TestCase):
             fallback_cover="https://c0.jdbstatic.com/covers/fn/FNS152.jpg",
         )
         self.assertEqual(cover, "https://c0.jdbstatic.com/covers/fn/FNS152.jpg")
+
+        # Verify dynamic CID discovery via Jav321 when an unindexed prefix misses initial candidates
+        mock_dyn_session = MagicMock()
+        post_resp = MagicMock()
+        post_resp.status_code = 200
+        post_resp.url = "https://www.jav321.com/video/h_9999zzxx00001"
+        post_resp.text = ""
+        mock_dyn_session.post.return_value = post_resp
+
+        def dyn_head_side_effect(url, **kwargs):
+            r = MagicMock()
+            r.url = url
+            if "h_9999zzxx00001" in url:
+                r.status_code = 200
+                r.headers = {"content-length": "650000"}
+            else:
+                r.status_code = 404
+                r.headers = {"content-length": "0"}
+            return r
+
+        mock_dyn_session.head.side_effect = dyn_head_side_effect
+        dyn_cover = resolve_dmm_hd_cover(
+            "ZZXX-001",
+            mock_dyn_session,
+            fallback_cover="https://c0.jdbstatic.com/covers/zz/ZZXX001.jpg",
+        )
+        self.assertEqual(
+            dyn_cover,
+            "https://awsimgsrc.dmm.co.jp/pics_dig/digital/video/h_9999zzxx00001/h_9999zzxx00001pl.jpg",
+        )
 
     def test_sod_separate_poster_resolution(self):
         # 1. Category 1 (START-315): 2K ps.jpg (>= 45 KB) is preferred

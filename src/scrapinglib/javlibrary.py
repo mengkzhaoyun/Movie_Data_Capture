@@ -10,6 +10,7 @@ from .parser import Parser
 from .rule_loader import (
     eval_all_xpaths,
     eval_first_xpath,
+    extract_dmm_cid_from_url,
     load_source_rules,
     resolve_dmm_hd_cover,
 )
@@ -67,17 +68,18 @@ class Javlibrary(Parser):
         """
         try:
             resp = self.session.get(url, allow_redirects=True)
-            if not self._is_challenge(resp.status_code, resp.text):
+            if resp is not None and not self._is_challenge(resp.status_code, resp.text):
                 return str(resp.url), resp.text
         except Exception:
             resp = None
 
-        from scrapinglib.cf_bypass import fetch_via_browser
-        ok, final_url, html_text, new_cookies = fetch_via_browser(url, "javlibrary.json")
-        if ok and html_text:
-            if new_cookies:
-                self.session.cookies.update(new_cookies)
-            return final_url, html_text
+        if resp is not None and self._is_challenge(resp.status_code, resp.text):
+            from scrapinglib.cf_bypass import fetch_via_browser
+            ok, final_url, html_text, new_cookies = fetch_via_browser(url, "javlibrary.json")
+            if ok and html_text:
+                if new_cookies:
+                    self.session.cookies.update(new_cookies)
+                return final_url, html_text
 
         if resp is not None:
             return str(resp.url), resp.text
@@ -142,11 +144,18 @@ class Javlibrary(Parser):
             url = 'https:' + url
         cover_upgrade_conf = self.rules.get("cover_upgrade", {})
         if cover_upgrade_conf.get("strategy", "dmm_aws_2k_first") == "dmm_aws_2k_first":
+            hint_cid = extract_dmm_cid_from_url(url)
+            if not hint_cid:
+                for sample_url in self.getExtrafanart(htmltree) or []:
+                    hint_cid = extract_dmm_cid_from_url(sample_url)
+                    if hint_cid:
+                        break
             return resolve_dmm_hd_cover(
                 self.number,
                 self.session,
                 fallback_cover=url,
                 cover_upgrade_conf=cover_upgrade_conf,
+                hint_cid=hint_cid,
             )
         return url
 

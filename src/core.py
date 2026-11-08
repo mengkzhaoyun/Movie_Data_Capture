@@ -517,6 +517,8 @@ def add_mark(poster_path, thumb_path, cn_sub, leak, uncensored, hack, _4k, iso) 
 
 
 def add_mark_thread(pic_path, cn_sub, leak, uncensored, hack, _4k, iso):
+    if not pic_path or file_not_exist_or_empty(pic_path):
+        return
     size = 9
     img_pic = Image.open(pic_path)
     # 获取自定义位置，取余配合pos达到顺时针添加的效果
@@ -574,7 +576,8 @@ def add_to_pic(pic_path, img_pic, size, count, mode):
     img_subt = Image.open(mark_pic_path)
     scroll_high = int(img_pic.height / size)
     scroll_wide = int(scroll_high * img_subt.width / img_subt.height)
-    img_subt = img_subt.resize((scroll_wide, scroll_high), Image.ANTIALIAS)
+    resample_filter = getattr(Image, "Resampling", Image).LANCZOS
+    img_subt = img_subt.resize((scroll_wide, scroll_high), resample_filter)
     r, g, b, a = img_subt.split()  # 获取颜色通道，保持png的透明性
     # 封面四个角的位置
     pos = [
@@ -584,6 +587,8 @@ def add_to_pic(pic_path, img_pic, size, count, mode):
         {'x': 0, 'y': img_pic.height - scroll_high},
     ]
     img_pic.paste(img_subt, (pos[count]['x'], pos[count]['y']), mask=a)
+    if img_pic.mode != 'RGB':
+        img_pic = img_pic.convert('RGB')
     img_pic.save(pic_path, quality=95)
 
 

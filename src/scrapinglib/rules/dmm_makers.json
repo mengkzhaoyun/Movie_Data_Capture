@@ -1,5 +1,5 @@
 {
-  "version": "2026.10.1",
+  "version": "2026.11.1",
   "description": "Deterministic DMM/FANZA studio prefix metadata registry (maps label prefixes to DMM maker codes and distribution channels)",
   "templates": {
     "digital": "https://awsimgsrc.dmm.co.jp/pics_dig/digital/video/{cid}/{cid}pl.jpg",
@@ -145,7 +145,112 @@
         "SCOP",
         "REAL",
         "UMSO",
-        "MDTM"
+        "MDTM",
+        "AUKG",
+        "AGAV",
+        "AGMX",
+        "ALDN",
+        "ANB",
+        "APAK",
+        "APGH",
+        "APKH",
+        "ARM",
+        "ASFB",
+        "ATYA",
+        "AUKS",
+        "AVSA",
+        "BAHP",
+        "BDA",
+        "BEB",
+        "BKD",
+        "BLOR",
+        "BMW",
+        "BNST",
+        "BONY",
+        "CEAD",
+        "CHIB",
+        "CKCK",
+        "CLUB",
+        "CND",
+        "CRPD",
+        "DDOB",
+        "DGL",
+        "DPMI",
+        "DVDMS",
+        "DVMM",
+        "DVRT",
+        "FBOS",
+        "FLVA",
+        "FSTU",
+        "GDTM",
+        "GQN",
+        "HALT",
+        "HETR",
+        "HJBB",
+        "HNTRZ",
+        "HSODA",
+        "HUBLK",
+        "JMD",
+        "JUFD",
+        "KAWD",
+        "KTB",
+        "KYMI",
+        "LULU",
+        "MADM",
+        "MADV",
+        "MANX",
+        "MASM",
+        "MDBK",
+        "MDON",
+        "MGMJ",
+        "MGMQ",
+        "MIAD",
+        "MIAE",
+        "MIBB",
+        "MIFD",
+        "MIGD",
+        "MIKR",
+        "MISM",
+        "MKON",
+        "MMNA",
+        "MOPP",
+        "MOPT",
+        "NAIAD",
+        "NDRA",
+        "NKKD",
+        "NNPJ",
+        "NSFS",
+        "NSPS",
+        "NTRH",
+        "OFES",
+        "OKSN",
+        "OMHD",
+        "OOWL",
+        "PFES",
+        "PKPD",
+        "PRST",
+        "PRWF",
+        "RBD",
+        "SKMN",
+        "SLAP",
+        "SMOK",
+        "SOJU",
+        "TAAK",
+        "TEAM",
+        "TEK",
+        "TIKB",
+        "TKSH",
+        "TSDS",
+        "TYOD",
+        "URKK",
+        "VAGU",
+        "VEC",
+        "VENU",
+        "VENX",
+        "VOD",
+        "YMDD",
+        "YMRK",
+        "ZUKO"
       ]
     },
     "maker_1": {
@@ -192,7 +297,27 @@
         "RCT",
         "SILK",
         "GAR",
-        "MTALL"
+        "MTALL",
+        "AKDL",
+        "BKYNB",
+        "DVDES",
+        "FCDSS",
+        "FTHTD",
+        "IESP",
+        "INDI",
+        "JERA",
+        "KUSE",
+        "MGOLD",
+        "MOON",
+        "NAMH",
+        "PIYO",
+        "SHH",
+        "STCV",
+        "SUN",
+        "SVFLA",
+        "SVMGM",
+        "SVVRT",
+        "TLDSP"
       ]
     },
     "prestige_118_mono_only": {
@@ -244,7 +369,10 @@
         "BXH",
         "GS",
         "PRD",
-        "PPP"
+        "PPP",
+        "INU",
+        "KRVS",
+        "SRS"
       ]
     },
     "kmp_84": {
@@ -291,7 +419,8 @@
         "GVH",
         "GVG",
         "RVG",
-        "OVG"
+        "OVG",
+        "SS"
       ]
     },
     "planet_plus_h237": {
@@ -308,7 +437,9 @@
         "AMBI",
         "AMBS",
         "CLOT",
-        "CEMD"
+        "CEMD",
+        "NACT",
+        "PKMS"
       ]
     },
     "dream_ticket_24": {
@@ -320,7 +451,9 @@
         "mono_padded"
       ],
       "prefixes": [
-        "VDD"
+        "VDD",
+        "COD",
+        "UFD"
       ]
     },
     "marrion_h618": {
@@ -352,7 +485,8 @@
         "NTK",
         "ARA",
         "JAC",
-        "OREC"
+        "OREC",
+        "KKNN"
       ]
     },
     "rebecca_h346": {
@@ -363,7 +497,8 @@
         "mono_padded"
       ],
       "prefixes": [
-        "REBD"
+        "REBD",
+        "REBDB"
       ]
     },
     "center_village_h086": {
@@ -391,7 +526,8 @@
       ],
       "prefixes": [
         "MXGS",
-        "MXSPS"
+        "MXSPS",
+        "MXBD"
       ]
     },
     "tma_55": {
@@ -403,7 +539,8 @@
       ],
       "prefixes": [
         "T28",
-        "TMA"
+        "TMA",
+        "AIKB"
       ]
     },
     "alice_japan_53": {
@@ -427,7 +564,8 @@
       ],
       "prefixes": [
         "XV",
-        "SRXV"
+        "SRXV",
+        "XVSR"
       ]
     },
     "marlomedia_h1814": {
@@ -441,11 +579,462 @@
       "prefixes": [
         "NMSL"
       ]
+    },
+    "doc_h1711": {
+      "maker_prefix": "h_1711",
+      "channels": [
+        "digital_padded"
+      ],
+      "prefixes": [
+        "MAAN",
+        "MFC",
+        "MFCS"
+      ]
+    },
+    "fetish_eye_h1440": {
+      "maker_prefix": "h_1440",
+      "channels": [
+        "digital_padded",
+        "mono_raw",
+        "mono_padded"
+      ],
+      "prefixes": [
+        "FGAN"
+      ]
+    },
+    "maker_h_1495": {
+      "maker_prefix": "h_1495",
+      "channels": [
+        "digital_padded",
+        "mono_raw",
+        "digital_legacy_padded",
+        "mono_padded"
+      ],
+      "prefixes": [
+        "BANK"
+      ]
+    },
+    "maker_143": {
+      "maker_prefix": "143",
+      "channels": [
+        "digital_padded",
+        "mono_raw",
+        "digital_legacy_padded",
+        "mono_padded"
+      ],
+      "prefixes": [
+        "BRK"
+      ]
+    },
+    "maker_5433": {
+      "maker_prefix": "5433",
+      "channels": [
+        "digital_padded",
+        "mono_raw",
+        "digital_legacy_padded",
+        "mono_padded"
+      ],
+      "prefixes": [
+        "BTHA"
+      ]
+    },
+    "maker_h_491": {
+      "maker_prefix": "h_491",
+      "channels": [
+        "digital_padded",
+        "mono_raw",
+        "digital_legacy_padded",
+        "mono_padded"
+      ],
+      "prefixes": [
+        "CHUC",
+        "LOVE",
+        "NEOS",
+        "FWAY"
+      ],
+      "label_rewrite": {
+        "FWAY": "fwa"
+      }
+    },
+    "maker_h_090": {
+      "maker_prefix": "h_090",
+      "channels": [
+        "digital_padded",
+        "mono_raw",
+        "digital_legacy_padded",
+        "mono_padded"
+      ],
+      "prefixes": [
+        "CRH"
+      ]
+    },
+    "maker_2": {
+      "maker_prefix": "2",
+      "channels": [
+        "digital_padded",
+        "mono_raw",
+        "digital_legacy_padded",
+        "mono_padded"
+      ],
+      "prefixes": [
+        "CWM"
+      ]
+    },
+    "maker_5561": {
+      "maker_prefix": "5561",
+      "channels": [
+        "digital_padded",
+        "mono_raw",
+        "digital_legacy_padded",
+        "mono_padded"
+      ],
+      "prefixes": [
+        "DOKI"
+      ]
+    },
+    "maker_36": {
+      "maker_prefix": "36",
+      "channels": [
+        "digital_padded",
+        "mono_raw",
+        "digital_legacy_padded",
+        "mono_padded"
+      ],
+      "prefixes": [
+        "DOKS"
+      ]
+    },
+    "maker_49": {
+      "maker_prefix": "49",
+      "channels": [
+        "digital_padded",
+        "mono_raw",
+        "digital_legacy_padded",
+        "mono_padded"
+      ],
+      "prefixes": [
+        "EKDV"
+      ]
+    },
+    "maker_direct_a": {
+      "maker_prefix": "",
+      "channels": [
+        "digital_padded",
+        "mono_raw",
+        "digital_legacy_padded",
+        "mono_padded"
+      ],
+      "prefixes": [
+        "FJIN"
+      ],
+      "cid_suffix": "a"
+    },
+    "maker_h_1714": {
+      "maker_prefix": "h_1714",
+      "channels": [
+        "digital_padded",
+        "mono_raw",
+        "digital_legacy_padded",
+        "mono_padded"
+      ],
+      "prefixes": [
+        "GRACE"
+      ]
+    },
+    "maker_59": {
+      "maker_prefix": "59",
+      "channels": [
+        "digital_padded",
+        "mono_raw",
+        "digital_legacy_padded",
+        "mono_padded"
+      ],
+      "prefixes": [
+        "HEZ"
+      ]
+    },
+    "maker_h_1658": {
+      "maker_prefix": "h_1658",
+      "channels": [
+        "digital_padded",
+        "mono_raw",
+        "digital_legacy_padded",
+        "mono_padded"
+      ],
+      "prefixes": [
+        "HNHU"
+      ]
+    },
+    "maker_h_066": {
+      "maker_prefix": "h_066",
+      "channels": [
+        "digital_padded",
+        "mono_raw",
+        "digital_legacy_padded",
+        "mono_padded"
+      ],
+      "prefixes": [
+        "HTMS",
+        "RHTS"
+      ]
+    },
+    "maker_29": {
+      "maker_prefix": "29",
+      "channels": [
+        "digital_padded",
+        "mono_raw",
+        "digital_legacy_padded",
+        "mono_padded"
+      ],
+      "prefixes": [
+        "HXAH"
+      ]
+    },
+    "maker_h_1472": {
+      "maker_prefix": "h_1472",
+      "channels": [
+        "digital_padded",
+        "mono_raw",
+        "digital_legacy_padded",
+        "mono_padded"
+      ],
+      "prefixes": [
+        "INSTV",
+        "MAZO"
+      ]
+    },
+    "maker_h_687": {
+      "maker_prefix": "h_687",
+      "channels": [
+        "digital_padded",
+        "mono_raw",
+        "digital_legacy_padded",
+        "mono_padded"
+      ],
+      "prefixes": [
+        "JBJB"
+      ]
+    },
+    "maker_h_094_e": {
+      "maker_prefix": "h_094",
+      "channels": [
+        "digital_padded",
+        "mono_raw",
+        "digital_legacy_padded",
+        "mono_padded"
+      ],
+      "prefixes": [
+        "KTRA"
+      ],
+      "cid_suffix": "e"
+    },
+    "maker_h_1231": {
+      "maker_prefix": "h_1231",
+      "channels": [
+        "digital_padded",
+        "mono_raw",
+        "digital_legacy_padded",
+        "mono_padded"
+      ],
+      "prefixes": [
+        "LD"
+      ]
+    },
+    "maker_301": {
+      "maker_prefix": "301",
+      "channels": [
+        "digital_padded",
+        "mono_raw",
+        "digital_legacy_padded",
+        "mono_padded"
+      ],
+      "prefixes": [
+        "MBDD"
+      ]
+    },
+    "maker_406": {
+      "maker_prefix": "406",
+      "channels": [
+        "digital_padded",
+        "mono_raw",
+        "digital_legacy_padded",
+        "mono_padded"
+      ],
+      "prefixes": [
+        "MBRAB"
+      ]
+    },
+    "maker_5050": {
+      "maker_prefix": "5050",
+      "channels": [
+        "digital_padded",
+        "mono_raw",
+        "digital_legacy_padded",
+        "mono_padded"
+      ],
+      "prefixes": [
+        "MBRBA",
+        "MBRBN"
+      ]
+    },
+    "maker_h_1240": {
+      "maker_prefix": "h_1240",
+      "channels": [
+        "digital_padded",
+        "mono_raw",
+        "digital_legacy_padded",
+        "mono_padded"
+      ],
+      "prefixes": [
+        "MILK"
+      ]
+    },
+    "maker_h_706_b": {
+      "maker_prefix": "h_706",
+      "channels": [
+        "digital_padded",
+        "mono_raw",
+        "digital_legacy_padded",
+        "mono_padded"
+      ],
+      "prefixes": [
+        "NAAC"
+      ],
+      "cid_suffix": "b"
+    },
+    "maker_h_067": {
+      "maker_prefix": "h_067",
+      "channels": [
+        "digital_padded",
+        "mono_raw",
+        "digital_legacy_padded",
+        "mono_padded"
+      ],
+      "prefixes": [
+        "NATR"
+      ]
+    },
+    "maker_h_188": {
+      "maker_prefix": "h_188",
+      "channels": [
+        "digital_padded",
+        "mono_raw",
+        "digital_legacy_padded",
+        "mono_padded"
+      ],
+      "prefixes": [
+        "NFDM"
+      ]
+    },
+    "maker_h_1757_e": {
+      "maker_prefix": "h_1757",
+      "channels": [
+        "digital_padded",
+        "mono_raw",
+        "digital_legacy_padded",
+        "mono_padded"
+      ],
+      "prefixes": [
+        "OLM"
+      ],
+      "cid_suffix": "e"
+    },
+    "maker_h_706": {
+      "maker_prefix": "h_706",
+      "channels": [
+        "digital_padded",
+        "mono_raw",
+        "digital_legacy_padded",
+        "mono_padded"
+      ],
+      "prefixes": [
+        "PRBYB"
+      ]
+    },
+    "maker_h_796": {
+      "maker_prefix": "h_796",
+      "channels": [
+        "digital_padded",
+        "mono_raw",
+        "digital_legacy_padded",
+        "mono_padded"
+      ],
+      "prefixes": [
+        "SAN"
+      ]
+    },
+    "maker_h_1824": {
+      "maker_prefix": "h_1824",
+      "channels": [
+        "digital_padded",
+        "mono_raw",
+        "digital_legacy_padded",
+        "mono_padded"
+      ],
+      "prefixes": [
+        "SBVD"
+      ]
+    },
+    "maker_15": {
+      "maker_prefix": "15",
+      "channels": [
+        "digital_padded",
+        "mono_raw",
+        "digital_legacy_padded",
+        "mono_padded"
+      ],
+      "prefixes": [
+        "SEND"
+      ]
+    },
+    "maker_h_771": {
+      "maker_prefix": "h_771",
+      "channels": [
+        "digital_padded",
+        "mono_raw",
+        "digital_legacy_padded",
+        "mono_padded"
+      ],
+      "prefixes": [
+        "TAMM"
+      ]
+    },
+    "maker_h_1072": {
+      "maker_prefix": "h_1072",
+      "channels": [
+        "digital_padded",
+        "mono_raw",
+        "digital_legacy_padded",
+        "mono_padded"
+      ],
+      "prefixes": [
+        "TSX"
+      ]
+    },
+    "maker_h_720": {
+      "maker_prefix": "h_720",
+      "channels": [
+        "digital_padded",
+        "mono_raw",
+        "digital_legacy_padded",
+        "mono_padded"
+      ],
+      "prefixes": [
+        "ZEX"
+      ]
     }
   },
   "fallback_maker_prefixes": [
     "",
     "1",
     "118"
-  ]
+  ],
+  "fallback_templates": {
+    "jav321_mgs_mium": "https://www.jav321.com/images/prestigepremium/300mium/{digits}/pb_e_300mium-{digits}.jpg",
+    "jav321_search_url": "https://www.jav321.com/search",
+    "jav321_mgs_luxu": "https://www.jav321.com/images/prestigepremium/luxu/{digits}/pb_e_259luxu-{digits}.jpg",
+    "jav321_mgs_gana": "https://www.jav321.com/images/prestigepremium/gana/{digits}/pb_e_200gana-{digits}.jpg",
+    "jav321_mgs_ara": "https://www.jav321.com/images/ara/261ara/{digits}/pb_e_261ara-{digits}.jpg",
+    "jav321_mgs_maan": "https://www.jav321.com/images/prestigepremium/300maan/{digits}/pb_e_300maan-{digits}.jpg"
+  }
 }

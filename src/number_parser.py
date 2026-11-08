@@ -5,9 +5,9 @@ import config
 import typing
 
 G_spat = re.compile(
-    "^\w+\.(cc|com|net|me|club|jp|tv|xyz|biz|wiki|info|tw|us|de)@|^22-sht\.me|"
-    "^(fhd|hd|sd|1080p|720p|4K)(-|_)|"
-    "(-|_)(fhd|hd|sd|1080p|720p|4K|x264|x265|uncensored|hack|leak)",
+    r"^\w+\.(cc|com|net|me|club|jp|tv|xyz|biz|wiki|info|tw|us|de)@|^22-sht\.me|"
+    r"^(fhd|hd|sd|1080p|720p|4K)(-|_)|"
+    r"(-|_)(fhd|hd|sd|1080p|720p|4K|x264|x265|uncensored|hack|leak)",
     re.IGNORECASE)
 
 
@@ -54,17 +54,17 @@ def get_number(debug: bool, file_path: str) -> str:
             return file_number
         elif '字幕组' in filepath or 'SUB' in filepath.upper() or re.match(r'[\u30a0-\u30ff]+', filepath):
             filepath = G_spat.sub("", filepath)
-            filepath = re.sub("\[.*?\]","",filepath)
+            filepath = re.sub(r"\[.*?\]","",filepath)
             filepath = filepath.replace(".chs", "").replace(".cht", "")
             file_number = str(re.findall(r'(.+?)\.', filepath)).strip(" [']")
             return file_number
         elif '-' in filepath or '_' in filepath:  # 普通提取番号 主要处理包含减号-和_的番号
             filepath = G_spat.sub("", filepath)
-            filename = str(re.sub("\[\d{4}-\d{1,2}-\d{1,2}\] - ", "", filepath))  # 去除文件名中时间
+            filename = str(re.sub(r"\[\d{4}-\d{1,2}-\d{1,2}\] - ", "", filepath))  # 去除文件名中时间
             lower_check = filename.lower()
             if 'fc2' in lower_check:
                 filename = lower_check.replace('--', '-').replace('_', '-').upper()
-            filename = re.sub("[-_]cd\d{1,2}", "", filename, flags=re.IGNORECASE)
+            filename = re.sub(r"[-_]cd\d{1,2}", "", filename, flags=re.IGNORECASE)
             if not re.search("-|_", filename): # 去掉-CD1之后再无-的情况，例如n1012-CD1.wmv
                 return str(re.search(r'\w+', filename[:filename.find('.')], re.A).group())
             file_number =  os.path.splitext(filename)
@@ -78,7 +78,7 @@ def get_number(debug: bool, file_path: str) -> str:
             file_number = re.sub("(-|_)l$", "", file_number, flags=re.IGNORECASE)
             file_number = re.sub("(-|_)c$", "", file_number, flags=re.IGNORECASE)
             file_number = re.sub("(-|_)u$", "", file_number, flags=re.IGNORECASE)
-            if re.search("\d+ch$", file_number, flags=re.I):
+            if re.search(r"\d+ch$", file_number, flags=re.I):
                 file_number = file_number[:-2]
             return file_number.upper()
         else:  # 提取不含减号-的番号，FANZA CID

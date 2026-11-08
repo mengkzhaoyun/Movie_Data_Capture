@@ -101,6 +101,7 @@ def _get_dmm_prefix_index() -> Dict[str, Dict[str, Any]]:
     for group_name, group_conf in groups.items():
         maker_prefix = str(group_conf.get("maker_prefix", ""))
         cid_suffix = str(group_conf.get("cid_suffix", ""))
+        rewrite_map = group_conf.get("label_rewrite") or {}
         channels = group_conf.get("channels") or ["digital_padded", "mono_raw", "mono_padded"]
         for p in group_conf.get("prefixes", []):
             key = str(p).strip().upper()
@@ -109,6 +110,7 @@ def _get_dmm_prefix_index() -> Dict[str, Dict[str, Any]]:
                     "group": group_name,
                     "maker_prefix": maker_prefix,
                     "cid_suffix": cid_suffix,
+                    "label_rewrite": str(rewrite_map.get(key, key.lower())).lower(),
                     "channels": list(channels),
                 }
     _DMM_PREFIX_INDEX = index
@@ -116,19 +118,29 @@ def _get_dmm_prefix_index() -> Dict[str, Dict[str, Any]]:
 
 
 def extract_dmm_cid_from_url(url_or_text: str) -> str:
-    """Extract official DMM CID from a DMM preview video or image URL if present."""
-    if not url_or_text:
+    """Extract official DMM CID from a DMM preview video, sample image, or Jav321 video URL if present."""
+    if not url_or_text or not isinstance(url_or_text, str):
         return ""
-    m = re.search(r"dmm\.co\.jp/litevideo/freepv/[^/]+/[^/]+/([a-z0-9_]+)/", url_or_text, re.I)
+    m = re.search(r"dmm\.co(?:\.jp|m)/+litevideo/freepv/[^/]+/[^/]+/([a-z0-9_]+)/", url_or_text, re.I)
     if m:
         return m.group(1).lower()
+    m_pv = re.search(
+        r"dmm\.co(?:\.jp|m)/+pv/[^/]+/([a-z0-9_]+?)(?:hhb|mhb|dmb|dm|sm|_dmb_w|_dm_w|_sm_w|_mhb_w)\.mp4",
+        url_or_text,
+        re.I,
+    )
+    if m_pv:
+        return m_pv.group(1).lower()
     m2 = re.search(
-        r"dmm\.co\.jp/(?:pics_dig/)?(?:digital/video|digital/amateur|mono/movie/adult)/([a-z0-9_]+)/",
+        r"dmm\.co(?:\.jp|m)/+(?:pics_dig/)?(?:digital/video|digital/amateur|mono/movie/adult)/([a-z0-9_]+)/",
         url_or_text,
         re.I,
     )
     if m2:
         return m2.group(1).lower()
+    m3 = re.search(r"jav321\.com/video/([a-z0-9_]+)", url_or_text, re.I)
+    if m3:
+        return m3.group(1).lower()
     return ""
 
 
@@ -143,7 +155,7 @@ def build_dmm_candidate_cids(number: str, hint_cid: str = "") -> List[str]:
 
     if not number:
         return cids
-    m = re.match(r"^(?:\d{3})?([a-zA-Z][a-zA-Z0-9]{1,6})-(\d{2,5})$", number.strip())
+    m = re.match(r"^(?:\d{3})?([a-zA-Z][a-zA-Z0-9]{1,6})-(\d{2,5})(?:[a-zA-Z])?$", number.strip())
     if not m:
         return cids
 
@@ -158,11 +170,15 @@ def build_dmm_candidate_cids(number: str, hint_cid: str = "") -> List[str]:
     if rule is not None:
         mp = rule["maker_prefix"]
         sfx = rule.get("cid_suffix", "")
+        eff_prefix = rule.get("label_rewrite") or prefix
         for ch in rule["channels"]:
             if ch in ("digital_padded", "digital_legacy_padded", "mono_padded"):
-                cids.append(f"{mp}{prefix}{padded}{sfx}")
+                cids.append(f"{mp}{eff_prefix}{padded}{sfx}")
             elif ch in ("mono_raw", "amateur_raw"):
-                cids.append(f"{mp}{prefix}{digits}{sfx}")
+                cids.append(f"{mp}{eff_prefix}{digits}{sfx}")
+        if eff_prefix != prefix:
+            cids.append(f"{prefix}{padded}")
+            cids.append(f"{prefix}{digits}")
     else:
         makers_data = load_source_rules("dmm_makers")
         fallback_mps = makers_data.get("fallback_maker_prefixes") or ["", "1", "118"]
@@ -224,7 +240,7 @@ def build_dmm_cover_urls(
     if not number:
         return urls
 
-    m = re.match(r"^(?:\d{3})?([a-zA-Z][a-zA-Z0-9]{1,6})-(\d{2,5})$", number.strip())
+    m = re.match(r"^(?:\d{3})?([a-zA-Z][a-zA-Z0-9]{1,6})-(\d{2,5})(?:[a-zA-Z])?$", number.strip())
     if not m:
         return urls
 
@@ -239,8 +255,9 @@ def build_dmm_cover_urls(
     if rule is not None:
         mp = rule["maker_prefix"]
         sfx = rule.get("cid_suffix", "")
-        cid_padded = f"{mp}{prefix}{padded}{sfx}"
-        cid_raw = f"{mp}{prefix}{digits}{sfx}"
+        eff_prefix = rule.get("label_rewrite") or prefix
+        cid_padded = f"{mp}{eff_prefix}{padded}{sfx}"
+        cid_raw = f"{mp}{eff_prefix}{digits}{sfx}"
         for ch in rule["channels"]:
             if ch == "digital_padded":
                 _add_url(digital_tpl.format(cid=cid_padded))
@@ -252,8 +269,11 @@ def build_dmm_cover_urls(
                 _add_url(mono_tpl.format(cid=cid_padded))
             elif ch == "amateur_raw":
                 _add_url(amateur_tpl.format(cid=cid_raw))
+        # Ensure digital_legacy_tpl is also included as fallback for digital_padded
+        if "digital_padded" in rule["channels"] and "digital_legacy_padded" not in rule["channels"]:
+            _add_url(digital_legacy_tpl.format(cid=cid_padded))
         # Secondary safety net: if studio switched between prefixed and unprefixed DMM channel
-        if mp or sfx:
+        if mp or sfx or eff_prefix != prefix:
             _add_url(digital_tpl.format(cid=f"{prefix}{padded}"))
             _add_url(mono_tpl.format(cid=f"{prefix}{digits}"))
     else:
@@ -293,6 +313,37 @@ def _probe_dmm_url_list(session, candidate_urls: List[str], min_size: int) -> st
     return ""
 
 
+def _discover_dmm_cid_via_jav321(number: str, session) -> str:
+    """
+    Dynamic CID discovery fallback via Jav321 search when a studio prefix is not yet in dmm_makers.json
+    and the primary scraper page had no DMM trailer/sample URLs.
+    """
+    if session is None or not number or not hasattr(session, "post"):
+        return ""
+    try:
+        resp = session.post(
+            "https://www.jav321.com/search",
+            data={"sn": number.strip().upper()},
+            allow_redirects=True,
+            timeout=5,
+        )
+        if getattr(resp, "status_code", 0) != 200:
+            return ""
+        final_url = getattr(resp, "url", "")
+        if isinstance(final_url, str) and "/video/" in final_url:
+            cid = extract_dmm_cid_from_url(final_url)
+            if cid:
+                return cid
+        html_text = getattr(resp, "text", "")
+        if isinstance(html_text, str) and html_text:
+            cid = extract_dmm_cid_from_url(html_text)
+            if cid:
+                return cid
+    except Exception:
+        pass
+    return ""
+
+
 def resolve_dmm_hd_cover(
     number: str,
     session,
@@ -302,7 +353,8 @@ def resolve_dmm_hd_cover(
 ) -> str:
     """
     Probe DMM official AWS 2K/HD or Mono watermark-free cover using deterministic
-    studio prefix metadata rules first; fall back to the source's own cover if unavailable.
+    studio prefix metadata rules first; if unknown/missed, dynamically discover CID via
+    Jav321 search; fall back to the source's own cover if unavailable.
     """
     if session is None:
         return fallback_cover
@@ -316,7 +368,28 @@ def resolve_dmm_hd_cover(
     conf = cover_upgrade_conf or {}
     min_size = int(conf.get("min_content_length", 20000))
     hit = _probe_dmm_url_list(session, candidate_urls, min_size)
-    return hit if hit else fallback_cover
+    if hit:
+        return hit
+
+    # Dynamic CID discovery when studio prefix is unknown or switched maker code
+    if not (hint_cid and hint_cid.strip()) and conf.get("jav321_cid_fallback", True):
+        m = re.match(r"^(?:\d{3})?([a-zA-Z][a-zA-Z0-9]{1,6})-(\d{2,5})", (number or "").strip())
+        prefix_upper = m.group(1).upper() if m else ""
+        if prefix_upper and prefix_upper not in _get_dmm_prefix_index():
+            discovered_cid = _discover_dmm_cid_via_jav321(number, session)
+            if discovered_cid:
+                extra_urls = [
+                    u
+                    for u in build_dmm_cover_urls(
+                        number, cover_upgrade_conf=cover_upgrade_conf, hint_cid=discovered_cid
+                    )
+                    if u not in candidate_urls
+                ]
+                hit = _probe_dmm_url_list(session, extra_urls, min_size)
+                if hit:
+                    return hit
+
+    return fallback_cover
 
 
 def resolve_separate_poster(

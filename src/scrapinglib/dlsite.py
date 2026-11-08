@@ -33,7 +33,7 @@ class Dlsite(Parser):
         if self.specifiedUrl:
             self.detailurl = self.specifiedUrl
             # TODO 应该从页面内获取 number
-            self.number = str(re.findall("\wJ\w+", self.detailurl)).strip(" [']")
+            self.number = str(re.findall(r"\wJ\w+", self.detailurl)).strip(" [']")
             htmltree = self.getHtmlTree(self.detailurl)
         elif "RJ" in number or "VJ" in number:
             self.number = number.upper()
@@ -60,7 +60,7 @@ class Dlsite(Parser):
                         search_result = self.getTreeAll(htmltree, '//*[@id="search_result_img_box"]/li[1]/dl/dd[2]/div[2]/a/@href')
             self.detailurl = search_result[0]
             htmltree = self.getHtmlTree(self.detailurl)
-            self.number = str(re.findall("\wJ\w+", self.detailurl)).strip(" [']")
+            self.number = str(re.findall(r"\wJ\w+", self.detailurl)).strip(" [']")
 
         result = self.dictformat(htmltree)
         return result

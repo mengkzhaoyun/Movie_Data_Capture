@@ -74,6 +74,8 @@ def cutImage(imagecut, path, thumb_path, poster_path, skip_facerec=False):
     elif conf.download_only_missing_images() and not file_not_exist_or_empty(fullpath_poster):
         return
     # imagecut为4时同时也是有码影片 也用人脸识别裁剪封面
+    if file_not_exist_or_empty(fullpath_fanart):
+        return
     if imagecut == 1 or imagecut == 4:  # 剪裁大封面
         try:
             img = Image.open(fullpath_fanart)
@@ -93,6 +95,8 @@ def cutImage(imagecut, path, thumb_path, poster_path, skip_facerec=False):
                 img2 = img.crop(face_crop_height(fullpath_fanart, width, height))
             else:  # 如果等于2/3
                 img2 = img
+            if img2.mode != 'RGB':
+                img2 = img2.convert('RGB')
             img2.save(fullpath_poster)
             print(f"[+]Image Cutted!     {Path(fullpath_poster).name}")
         except Exception as e:

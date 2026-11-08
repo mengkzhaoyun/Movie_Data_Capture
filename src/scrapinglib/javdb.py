@@ -85,11 +85,15 @@ class Javdb(Parser):
         return any(kw in resp.text for kw in keywords)
 
     def _fetch_with_cf_fallback(self, url: str):
-        try:
-            resp = self.session.get(url)
-        except Exception:
-            resp = None
-        if resp is None or self._is_challenge_response(resp):
+        resp = None
+        for _ in range(2):
+            try:
+                resp = self.session.get(url)
+                if resp is not None:
+                    break
+            except Exception:
+                resp = None
+        if resp is not None and self._is_challenge_response(resp):
             from scrapinglib.cf_bypass import fetch_via_browser
             ok, final_url, html_text, new_cookies = fetch_via_browser(url, "javdb.json")
             if ok and html_text:
@@ -113,6 +117,8 @@ class Javdb(Parser):
         else:
             self.detailurl = self.queryNumberUrl(number)
         resp = self._fetch_with_cf_fallback(self.detailurl)
+        if resp is None or not getattr(resp, "text", ""):
+            raise ConnectionError(f"[!] {self.number}: Failed to fetch detail page from {self.detailurl}")
         self.deatilpage = resp.text
         auth_keywords = self.rules.get("auth_wall_keywords") or [
             '此內容需要登入才能查看或操作',
@@ -133,6 +139,8 @@ class Javdb(Parser):
         javdb_url = url_tpl.format(site=self.dbsite, number=number)
         try:
             resp = self._fetch_with_cf_fallback(javdb_url)
+            if resp is None or not getattr(resp, "text", ""):
+                raise ConnectionError(f"Empty or failed HTTP response from {javdb_url}")
             self.querytree = etree.fromstring(resp.text, etree.HTMLParser())
 
             urls_xpath = search_conf.get("item_urls_xpath", '//*[contains(@class,"movie-list")]/div/a/@href')
@@ -224,12 +232,17 @@ class Javdb(Parser):
                 htmltree, self._field_xpaths("cover", [self.expr_cover, self.expr_cover2])
             )
 
-        # 方案 1：优先基于内置片商元数据规则与预告片 CID 定位 DMM 官方无水印原图，失败则回退 JavDB 封面
+        # 方案 1：优先基于内置片商元数据规则与预告片/预览图 CID 定位 DMM 官方无水印原图，失败则回退 JavDB 封面
         cover_upgrade_conf = self.rules.get("cover_upgrade", {})
         if cover_upgrade_conf.get("strategy", "dmm_aws_2k_first") == "dmm_aws_2k_first":
             hint_cid = ""
             if not self.noauth:
                 hint_cid = extract_dmm_cid_from_url(self.getTrailer(htmltree))
+                if not hint_cid:
+                    for sample_url in self.getExtrafanart(htmltree) or []:
+                        hint_cid = extract_dmm_cid_from_url(sample_url)
+                        if hint_cid:
+                            break
             upgraded = resolve_dmm_hd_cover(
                 self.number,
                 getattr(self, "session", None),

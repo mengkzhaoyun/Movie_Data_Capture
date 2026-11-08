@@ -51,7 +51,7 @@ class wwwGetchu(Parser):
 
     def queryNumberUrl(self, number):
         if 'GETCHU' in number.upper():
-            idn = re.findall('\d+',number)[0]
+            idn = re.findall(r'\d+',number)[0]
             return "http://www.getchu.com/soft.phtml?id=" + idn
         else:
             queryUrl = self.GETCHU_WWW_SEARCH_URL.replace("_WORD_", quote(number, encoding="euc_jp"))
@@ -79,7 +79,7 @@ class wwwGetchu(Parser):
         return resp
 
     def getNum(self, htmltree):
-        return 'GETCHU-' + re.findall('\d+', self.detailurl.replace("http://www.getchu.com/soft.phtml?id=", ""))[0]
+        return 'GETCHU-' + re.findall(r'\d+', self.detailurl.replace("http://www.getchu.com/soft.phtml?id=", ""))[0]
 
     def getActors(self, htmltree):
         return super().getDirector(htmltree)
@@ -145,18 +145,18 @@ class dlGetchu(wwwGetchu):
 
     def queryNumberUrl(self, number):
         if "item" in number or 'GETCHU' in number.upper():
-            self.number = re.findall('\d+',number)[0]
+            self.number = re.findall(r'\d+',number)[0]
         else:
             queryUrl = self.GETCHU_DL_SEARCH_URL.replace("_WORD_", quote(number, encoding="euc_jp"))
             queryTree = self.getHtmlTree(queryUrl)
             detailurl = self.getTreeElement(queryTree, '/html/body/div[1]/table/tr/td/table[4]/tr/td[2]/table/tr[2]/td/table/tr/td/table/tr/td[2]/div/a[1]/@href')
             if detailurl == "":
                 return None
-            self.number = re.findall('\d+', detailurl)[0]
+            self.number = re.findall(r'\d+', detailurl)[0]
         return self.GETCHU_DL_URL.replace("_WORD_", self.number)    
 
     def getNum(self, htmltree):
-        return 'GETCHU-' + re.findall('\d+', self.number)[0]
+        return 'GETCHU-' + re.findall(r'\d+', self.number)[0]
 
     def extradict(self, dic: dict):
         return dic

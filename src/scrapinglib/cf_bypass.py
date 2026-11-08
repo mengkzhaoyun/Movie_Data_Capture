@@ -46,6 +46,9 @@ def _is_challenge_title(title: str, target_url: str) -> bool:
     return False
 
 
+_DRISSION_WARNED = False
+
+
 def fetch_via_browser(
     target_url: str,
     cookie_filename: str = "javdb.json",
@@ -56,10 +59,13 @@ def fetch_via_browser(
     the Turnstile widget when rendered), save cookies, and return:
         (success, final_url, html_text, cookies_dict)
     """
+    global _DRISSION_WARNED
     try:
         from DrissionPage import ChromiumOptions, ChromiumPage
     except ImportError:
-        print("[-] DrissionPage is not installed. Cloudflare auto-bypass is disabled.")
+        if not _DRISSION_WARNED:
+            print("[-] DrissionPage is not installed. Cloudflare auto-bypass is disabled.")
+            _DRISSION_WARNED = True
         return False, target_url, "", {}
 
     print(f"[*] Starting Cloudflare Browser Fetch for {target_url}...")

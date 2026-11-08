@@ -321,7 +321,7 @@ def translate(
         return src
     if engine == "google-free":
         gsite = config.getInstance().get_translate_service_site()
-        if not re.match('^translate\.google\.(com|com\.\w{2}|\w{2})$', gsite):
+        if not re.match(r'^translate\.google\.(com|com\.\w{2}|\w{2})$', gsite):
             gsite = 'translate.google.cn'
         url = (
             f"https://{gsite}/translate_a/single?client=gtx&dt=t&dj=1&ie=UTF-8&sl=auto&tl={target_language}&q={src}"

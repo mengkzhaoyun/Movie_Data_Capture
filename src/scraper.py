@@ -273,6 +273,9 @@ def get_data_from_json(
             return total
 
         def convert(mapping_data, language, vars):
+            exact_hits = mapping_data.xpath('a[contains(@keyword, $name)]/@' + language, name=f",{vars},")
+            if len(exact_hits) != 0:
+                return exact_hits[0]
             if len(mapping_data.xpath('a[contains(@keyword, $name)]/@' + language, name=vars)) != 0:
                 return mapping_data.xpath('a[contains(@keyword, $name)]/@' + language, name=vars)[0]
             else:

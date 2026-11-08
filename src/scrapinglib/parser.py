@@ -220,7 +220,7 @@ class Parser:
         """
         try:
             release = self.getRelease(htmltree)
-            return str(re.findall('\d{4}', release)).strip(" ['']")
+            return str(re.findall(r'\d{4}', release)).strip(" ['']")
         except:
             return release
 
