@@ -6,6 +6,7 @@
     "digital_legacy": "https://pics.dmm.co.jp/digital/video/{cid}/{cid}pl.jpg",
     "mono": "https://pics.dmm.co.jp/mono/movie/adult/{cid}/{cid}pl.jpg",
     "amateur": "https://awsimgsrc.dmm.co.jp/pics_dig/digital/amateur/{cid}/{cid}jp.jpg",
+    "amateur_legacy": "https://pics.dmm.co.jp/digital/amateur/{cid}/{cid}jp.jpg",
     "digital_ps": "https://awsimgsrc.dmm.co.jp/pics_dig/digital/video/{cid}/{cid}ps.jpg",
     "digital_legacy_ps": "https://pics.dmm.co.jp/digital/video/{cid}/{cid}ps.jpg",
     "mono_ps": "https://pics.dmm.co.jp/mono/movie/adult/{cid}/{cid}ps.jpg",
@@ -486,7 +487,8 @@
         "ARA",
         "JAC",
         "OREC",
-        "KKNN"
+        "KKNN",
+        "EROFC"
       ]
     },
     "rebecca_h346": {
@@ -1029,6 +1031,17 @@
     "1",
     "118"
   ],
+  "mgs_cover_templates": {
+    "EROFC": "https://image.mgstage.com/images/renaikanojo/546erofc/{digits}/pb_e_546erofc-{digits}.jpg",
+    "JAC": "https://image.mgstage.com/images/jackson/390jac/{digits}/pb_e_390jac-{digits}.jpg",
+    "MIUM": "https://image.mgstage.com/images/prestigepremium/300mium/{digits}/pb_e_300mium-{digits}.jpg",
+    "MAAN": "https://image.mgstage.com/images/prestigepremium/300maan/{digits}/pb_e_300maan-{digits}.jpg",
+    "NTK": "https://image.mgstage.com/images/prestigepremium/300ntk/{digits}/pb_e_300ntk-{digits}.jpg",
+    "LUXU": "https://image.mgstage.com/images/prestigepremium/luxu/{digits}/pb_e_259luxu-{digits}.jpg",
+    "GANA": "https://image.mgstage.com/images/prestigepremium/gana/{digits}/pb_e_200gana-{digits}.jpg",
+    "ARA": "https://image.mgstage.com/images/ara/261ara/{digits}/pb_e_261ara-{digits}.jpg",
+    "OREC": "https://image.mgstage.com/images/orec/230orec/{digits}/pb_e_230orec-{digits}.jpg"
+  },
   "fallback_templates": {
     "jav321_mgs_mium": "https://www.jav321.com/images/prestigepremium/300mium/{digits}/pb_e_300mium-{digits}.jpg",
     "jav321_search_url": "https://www.jav321.com/search",

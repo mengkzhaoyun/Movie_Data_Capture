@@ -222,6 +222,10 @@ def build_dmm_cover_urls(
     amateur_tpl = tpl_map.get(
         "amateur", "https://awsimgsrc.dmm.co.jp/pics_dig/digital/amateur/{cid}/{cid}jp.jpg"
     )
+    amateur_legacy_tpl = tpl_map.get(
+        "amateur_legacy", "https://pics.dmm.co.jp/digital/amateur/{cid}/{cid}jp.jpg"
+    )
+    mgs_tpl_map = makers_data.get("mgs_cover_templates") or {}
     custom_templates = conf.get("dmm_templates")
 
     urls: List[str] = []
@@ -236,6 +240,7 @@ def build_dmm_cover_urls(
         _add_url(digital_legacy_tpl.format(cid=hcid))
         _add_url(mono_tpl.format(cid=hcid))
         _add_url(amateur_tpl.format(cid=hcid))
+        _add_url(amateur_legacy_tpl.format(cid=hcid))
 
     if not number:
         return urls
@@ -248,6 +253,10 @@ def build_dmm_cover_urls(
     prefix = m.group(1).lower()
     digits = m.group(2)
     padded = digits.zfill(5)
+
+    mgs_tpl = mgs_tpl_map.get(prefix_upper)
+    if mgs_tpl:
+        _add_url(mgs_tpl.format(digits=digits, padded=padded))
 
     prefix_index = _get_dmm_prefix_index()
     rule = prefix_index.get(prefix_upper)
@@ -269,6 +278,7 @@ def build_dmm_cover_urls(
                 _add_url(mono_tpl.format(cid=cid_padded))
             elif ch == "amateur_raw":
                 _add_url(amateur_tpl.format(cid=cid_raw))
+                _add_url(amateur_legacy_tpl.format(cid=cid_raw))
         # Ensure digital_legacy_tpl is also included as fallback for digital_padded
         if "digital_padded" in rule["channels"] and "digital_legacy_padded" not in rule["channels"]:
             _add_url(digital_legacy_tpl.format(cid=cid_padded))
@@ -283,6 +293,7 @@ def build_dmm_cover_urls(
             for tpl in templates:
                 _add_url(tpl.format(cid=cid))
         _add_url(amateur_tpl.format(cid=f"{prefix}{digits}"))
+        _add_url(amateur_legacy_tpl.format(cid=f"{prefix}{digits}"))
 
     return urls
 
@@ -295,16 +306,19 @@ def _probe_dmm_url_list(session, candidate_urls: List[str], min_size: int) -> st
         try:
             resp = session.head(url, allow_redirects=True, timeout=5)
             final_url = str(getattr(resp, "url", url))
-            if resp.status_code != 200 or "now_printing" in final_url or "noimage" in final_url:
+            if "now_printing" in final_url or "noimage" in final_url:
                 continue
-            content_len = int(resp.headers.get("content-length") or resp.headers.get("Content-Length") or 0)
-            if content_len >= min_size:
-                return url
-            if content_len == 0:
+            if resp.status_code == 200:
+                content_len = int(resp.headers.get("content-length") or resp.headers.get("Content-Length") or 0)
+                if content_len >= min_size:
+                    return url
+            if resp.status_code in (200, 405):
                 g_resp = session.get(url, allow_redirects=True, timeout=6)
+                g_final = str(getattr(g_resp, "url", url))
                 if (
                     g_resp.status_code == 200
-                    and "now_printing" not in str(getattr(g_resp, "url", url))
+                    and "now_printing" not in g_final
+                    and "noimage" not in g_final
                     and len(g_resp.content) >= min_size
                 ):
                     return url

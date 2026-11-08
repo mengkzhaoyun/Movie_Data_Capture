@@ -307,6 +307,14 @@ class TestDeclarativeScrapers(unittest.TestCase):
             build_dmm_cover_urls("ANKK-098")[0],
             "https://awsimgsrc.dmm.co.jp/pics_dig/digital/amateur/ankk098/ankk098jp.jpg",
         )
+        self.assertEqual(
+            build_dmm_cover_urls("546EROFC-123")[0],
+            "https://image.mgstage.com/images/renaikanojo/546erofc/123/pb_e_546erofc-123.jpg",
+        )
+        self.assertEqual(
+            build_dmm_cover_urls("390JAC-081")[0],
+            "https://image.mgstage.com/images/jackson/390jac/081/pb_e_390jac-081.jpg",
+        )
 
         # Extract CID from DMM trailer URL (legacy /litevideo/freepv/ and new /pv/<token>/<cid>hhb.mp4)
         self.assertEqual(
